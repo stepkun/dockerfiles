@@ -3,27 +3,22 @@ FROM ubuntu:22.04 AS base
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# set timezone
-ENV TZ="Europe/Berlin"
-
-# Install language
+# Install apt-utils, language and timezone
 RUN apt-get update && apt-get install -y \
-  locales \
+    apt-utils \
+    tzdata \
+    locales \
   && locale-gen de_DE.UTF-8 \
   && update-locale LC_ALL=de_DE.UTF-8 LANG=de_DE.UTF-8 \
-  && rm -rf /var/lib/apt/lists/*
-ENV LANG de_DE.UTF-8
-
-# Install timezone
-RUN ln -fs /usr/share/zoneinfo/UTC /etc/localtime \
-  && export DEBIAN_FRONTEND=noninteractive \
-  && apt-get update \
-  && apt-get install -y tzdata \
   && dpkg-reconfigure --frontend noninteractive tzdata \
   && rm -rf /var/lib/apt/lists/*
 
-# Install Base package of Vulcanexus
-RUN apt-get update -y && apt-get install -y \
+# set language and timezone
+ENV LANG de_DE.UTF-8
+ENV TZ="Europe/Berlin"
+
+# Install Base package of Vulcanexus including ROS2
+RUN apt-get update && apt-get install -y \
     curl \
     gnupg2 \
     lsb-release \
@@ -34,7 +29,6 @@ RUN apt-get update -y && apt-get install -y \
   && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/vulcanexus-archive-keyring.gpg] http://repo.vulcanexus.org/debian $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/vulcanexus.list > /dev/null \
   && apt-get -y update && apt-get install -y \
     vulcanexus-humble-base \
-    python3-argcomplete \
   && rm -rf /var/lib/apt/lists/*
 
 ENV DEBIAN_FRONTEND=
