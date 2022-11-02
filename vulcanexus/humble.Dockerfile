@@ -1,10 +1,11 @@
-# Base image for ROS2 humble is ubuntu 22.04
+# syntax=docker/dockerfile:1
+# Base image for Vulcanexus/ROS2 humble is ubuntu 22.04
 FROM ubuntu:22.04 AS base
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install apt-utils, language and timezone
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     apt-utils \
     tzdata \
     locales \
@@ -17,7 +18,7 @@ RUN apt-get update && apt-get install -y \
 ENV LANG de_DE.UTF-8
 ENV TZ="Europe/Berlin"
 
-# Install Base package of Vulcanexus including ROS2
+# Install Base package of Vulcanexus which is including ROS2
 RUN apt-get update && apt-get install -y \
     curl \
     gnupg2 \

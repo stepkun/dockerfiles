@@ -4,7 +4,7 @@
 Create a dockerfile with vulcanexus humble
 
 ### build:
-docker build -t vlcnxs .
+docker build -t vlcnxs -f humble.Dockerfile .
 
 ### run:
 xhost local:root
@@ -13,4 +13,7 @@ docker run \
     --privileged \
     -e DISPLAY=$DISPLAY \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
-    vlcnxs
+    --name vlcnxs vlcnxs
+
+### additional shell:
+docker exec -i vlcnxs bash
