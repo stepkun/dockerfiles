@@ -1,9 +1,10 @@
 # dockerfiles
 
 ## Directory vulcanexus
-Create a dockerfile with vulcanexus humble
+Create docker images with vulcanexus/ROS2
 
 ### build:
+docker rm vlcnxs && docker rmi vlcnxs
 docker build -t vlcnxs -f humble.Dockerfile .
 
 ### run:
