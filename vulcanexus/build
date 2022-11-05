@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# change DOCKER_ID to your value
+DOCKER_ID=stepkun
+
+# delete existing containers based on imagees that will be rebuild 
+docker rm --force vulcanexus-humble-run
+docker rm --force vulcanexus-humble-dev
+docker rm --force vulcanexus-humble-full
+
+# deletion of images in layer order top down
+#docker rmi $DOCKER_ID/vulcanexus:humble-full
+#docker rmi $DOCKER_ID/vulcanexus:humble-dev
+#docker rmi $DOCKER_ID/vulcanexus:humble-run
+
+# creation in layer order bottom up
+# option --squash to build first stage into a single layer does not work yet
+DOCKER_BUILDKIT=1 docker build \
+    --target run  -t $DOCKER_ID/vulcanexus:humble-run  -f humble.Dockerfile .
+DOCKER_BUILDKIT=1 docker build \
+    --target dev  -t $DOCKER_ID/vulcanexus:humble-dev  -f humble.Dockerfile .
+DOCKER_BUILDKIT=1 docker build \
+    --target full -t $DOCKER_ID/vulcanexus:humble-full -f humble.Dockerfile .
