@@ -9,7 +9,7 @@ ARG USER_GID=$USER_UID
 # Base image
 ######################################
 # Base image for Vulcanexus/ROS2 humble is ubuntu 22.04
-FROM ubuntu:22.04 AS base
+FROM ubuntu:22.04 AS run
 
 # use global args
 ARG USERNAME
@@ -76,7 +76,7 @@ ENV DEBIAN_FRONTEND=
 ######################################
 # Developer image
 ######################################
-FROM base AS dev
+FROM run AS devel
 
 # use global args
 ARG USERNAME
@@ -113,3 +113,21 @@ ENV AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=1
 
 # cleanup image
 ENV DEBIAN_FRONTEND=
+
+######################################
+# Developer image
+######################################
+FROM devel AS full
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Add development packages
+RUN apt-get update \
+  && apt-get install -y \
+    vulcanexus-humble-desktop \
+  # Cleanup
+  && rm -rf /var/lib/apt/lists/*
+
+# cleanup image
+ENV DEBIAN_FRONTEND=
+
