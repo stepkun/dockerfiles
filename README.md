@@ -42,5 +42,5 @@ docker run -it \
 ```
 An additional shell can be started with
 ```
-docker exec -it <name> bash
+docker exec -it <name> su ros
 ```

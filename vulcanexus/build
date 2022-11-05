@@ -4,9 +4,9 @@
 DOCKER_ID=stepkun
 
 # delete existing containers based on imagees that will be rebuild 
-docker rm --force vulcanexus-humble-run
-docker rm --force vulcanexus-humble-dev
-docker rm --force vulcanexus-humble-full
+#docker rm --force vulcanexus-humble-run
+#docker rm --force vulcanexus-humble-dev
+#docker rm --force vulcanexus-humble-full
 
 # deletion of images in layer order top down
 #docker rmi $DOCKER_ID/vulcanexus:humble-full

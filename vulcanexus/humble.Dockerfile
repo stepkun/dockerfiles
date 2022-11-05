@@ -1,29 +1,32 @@
 # syntax=docker/dockerfile:1
 
+# global configuration values
 # non-root user "ros"
 ARG USERNAME=ros
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
+# wanted ros distro
+ARG ROS_DISTRO=humble
+# wanted timezone
+ARG TIMEZONE="Europe/Berlin"
 
 ######################################
-# Runtime image
+# Localized image
 ######################################
 # Base image for Vulcanexus/ROS2 humble is ubuntu 22.04
-FROM ubuntu:22.04 AS run
+FROM ubuntu:22.04 AS localized
 
-# use global args
-ARG USERNAME
-ARG USER_UID
-ARG USER_GID
+ARG TIMEZONE
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install apt-utils, language and timezone
+# Install apt-utils, language, timezone and xterm
 RUN apt-get update \
   && apt-get install -y \
     apt-utils \
     locales \
     tzdata \
+    xterm \
   && locale-gen de_DE.UTF-8 \
   && update-locale LC_ALL=de_DE.UTF-8 LANG=de_DE.UTF-8 \
   && dpkg-reconfigure --frontend noninteractive tzdata \
@@ -32,7 +35,25 @@ RUN apt-get update \
 
 # set language and timezone
 ENV LANG de_DE.UTF-8 \
-    TZ="Europe/Berlin"
+    TZ=$TIMEZONE
+
+# cleanup image
+ENV DEBIAN_FRONTEND=
+
+######################################
+# Runtime image
+######################################
+# Base image for Vulcanexus/ROS2 humble is ubuntu 22.04
+FROM localized AS run
+
+# use global args
+ARG USERNAME
+ARG USER_UID
+ARG USER_GID
+ARG ROS_DISTRO
+ARG TIMEZONE
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Install Base package of Vulcanexus which is including ROS2
 RUN apt-get update \
@@ -46,7 +67,11 @@ RUN apt-get update \
   && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/vulcanexus-archive-keyring.gpg] http://repo.vulcanexus.org/debian $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/vulcanexus.list > /dev/null \
   && apt-get -y update \
   && apt-get install -y \
-    vulcanexus-humble-base \
+    vulcanexus-$ROS_DISTRO-base \
+  # add non-root user as defined above
+  && groupadd --gid $USER_GID $USERNAME \
+  && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
+  && echo "if [ -f /opt/ros/${ROS_DISTRO}/setup.bash ]; then source /opt/ros/${ROS_DISTRO}/setup.bash; fi" >> /home/$USERNAME/.bashrc \
   # Cleanup
   && rm -rf /var/lib/apt/lists/*
 
@@ -59,20 +84,15 @@ ENV AMENT_PREFIX_PATH=/opt/vulcanexus/humble:/opt/ros/humble \
     PKG_CONFIG_PATH=/opt/vulcanexus/humble/lib/x86_64-linux-gnu/pkgconfig:/opt/vulcanexus/humble/lib/pkgconfig \
     PYTHONPATH=/opt/vulcanexus/humble/local/lib/python3.10/dist-packages:/opt/vulcanexus/humble/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages \
     RMW_IMPLEMENTATION=rmw_fastrtps_cpp \
-    ROS_DISTRO=humble \
+    ROS_DISTRO=$ROS_DISTRO \
     ROS_LOCALHOST_ONLY=0 \
     ROS_PYTHON_VERSION=3 \
     ROS_VERSION=2 \
     VULCANEXUS_DISTRO=humble \
-    VULCANEXUS_HOME=/opt/vulcanexus/humble
-
-# add non-root user as defined above
-RUN groupadd --gid $USER_GID $USERNAME \
-  && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
-  && echo "if [ -f /opt/ros/${ROS_DISTRO}/setup.bash ]; then source /opt/ros/${ROS_DISTRO}/setup.bash; fi" >> /home/$USERNAME/.bashrc
-
-# cleanup image
-ENV DEBIAN_FRONTEND=
+    VULCANEXUS_HOME=/opt/vulcanexus/humble \
+    TZ=$TIMEZONE \
+    # cleanup image
+    DEBIAN_FRONTEND=
 
 # change startup user to ros
 CMD su ros
@@ -87,6 +107,8 @@ FROM run AS dev
 ARG USERNAME
 ARG USER_UID
 ARG USER_GID
+#ARG ROS_DISTRO
+ARG TIMEZONE
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -115,6 +137,7 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 ENV AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=1 \
+    TZ=$TIMEZONE \
     DEBIAN_FRONTEND=
 
 ######################################
@@ -126,16 +149,17 @@ FROM dev AS full
 ARG USERNAME
 ARG USER_UID
 ARG USER_GID
+ARG ROS_DISTRO
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Add development packages
 RUN apt-get update \
   && apt-get install -y \
-    vulcanexus-humble-desktop \
+    vulcanexus-$ROS_DISTRO-desktop \
   # Cleanup
   && rm -rf /var/lib/apt/lists/*
 
 # cleanup image
-ENV DEBIAN_FRONTEND=
-
+ENV TZ=$TIMEZONE \
+    DEBIAN_FRONTEND=
