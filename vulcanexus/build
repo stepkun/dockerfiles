@@ -3,21 +3,27 @@
 # change DOCKER_ID to your value
 DOCKER_ID=stepkun
 
-# delete existing containers based on imagees that will be rebuild 
-#docker rm --force vulcanexus-humble-run
-#docker rm --force vulcanexus-humble-dev
-#docker rm --force vulcanexus-humble-full
+# set wanted distro
+DISTRO=humble
+UBUNTU=22.04
 
-# deletion of images in layer order top down
-#docker rmi $DOCKER_ID/vulcanexus:humble-full
-#docker rmi $DOCKER_ID/vulcanexus:humble-dev
-#docker rmi $DOCKER_ID/vulcanexus:humble-run
+# usable parameters:
+LANGUAGE=de_DE.UTF-8
+TIMEZONE="Europe/Berlin"
+USERNAME=ros
+USER_UID=1000
+USER_GID=$USER_UID
+
+# create param string from wanted values
+PARAMS="--build-arg ROS_DISTRO=$DISTRO \
+        --build-arg UBUNTU_VERSION=$UBUNTU \
+        --build-arg LANGUAGE=$LANGUAGE \
+        --build-arg TIMEZONE=$TIMEZONE \
+        --build-arg USERNAME=$USERNAME \
+        --build-arg USER_UID=$USER_UID \
+        --build-arg USER_GID=$USER_GID"
 
 # creation in layer order bottom up
-# option --squash to build first stage into a single layer does not work yet
-DOCKER_BUILDKIT=1 docker build \
-    --target run  -t $DOCKER_ID/vulcanexus:humble-run  -f humble.Dockerfile .
-DOCKER_BUILDKIT=1 docker build \
-    --target dev  -t $DOCKER_ID/vulcanexus:humble-dev  -f humble.Dockerfile .
-DOCKER_BUILDKIT=1 docker build \
-    --target full -t $DOCKER_ID/vulcanexus:humble-full -f humble.Dockerfile .
+DOCKER_BUILDKIT=1 docker build --target run  $PARAMS -t $DOCKER_ID/vulcanexus:$DISTRO-run .
+DOCKER_BUILDKIT=1 docker build --target dev  $PARAMS -t $DOCKER_ID/vulcanexus:$DISTRO-dev .
+DOCKER_BUILDKIT=1 docker build --target full $PARAMS -t $DOCKER_ID/vulcanexus:$DISTRO-full .
