@@ -18,8 +18,18 @@ Please change DOCKER_ID in script to your Docker ID<br>
 <br>
 To build an individual target use
 ```
-docker build --target <target> -t <dockerID>/vulcanexus:humble-<target> -f humble.Dockerfile .
+docker build \
+    --build-arg ROS_DISTRO=<ros-distro> \
+    --build-arg UBUNTU_VERSION=<ubuntu-version> \
+    --build-arg LANGUAGE=<language-code> \
+    --build-arg TIMEZONE=<region/town> \
+    --build-arg USERNAME=<username_for_ros-user> \
+    --build-arg USER_UID=<ros-user_group-id> \
+    --build-arg USER_GID=<ros-user_user-id>"
+    --target <target> \
+    -t <dockerID>/vulcanexus:humble-<target> -f Dockerfile .
 ```
+There are defaults for the `--build-args` which fit for ROS2 Humble in Europe/Berlin Germany with a ros-user `ros`!
 
 ### Push:
 To push them all to docker hub, run script "push" in this directory<br>
