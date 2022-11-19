@@ -24,6 +24,6 @@ PARAMS="--build-arg ROS_DISTRO=$DISTRO \
         --build-arg USER_GID=$USER_GID"
 
 # creation in layer order bottom up
-DOCKER_BUILDKIT=1 docker build --target run  $PARAMS -t $DOCKER_ID/vulcanexus:$DISTRO-run .
-DOCKER_BUILDKIT=1 docker build --target dev  $PARAMS -t $DOCKER_ID/vulcanexus:$DISTRO-dev .
-DOCKER_BUILDKIT=1 docker build --target full $PARAMS -t $DOCKER_ID/vulcanexus:$DISTRO-full .
+DOCKER_BUILDKIT=1 docker build --target run  $1 $2 $PARAMS -t $DOCKER_ID/vulcanexus:$DISTRO-run .
+DOCKER_BUILDKIT=1 docker build --target dev  $1 $2 $PARAMS -t $DOCKER_ID/vulcanexus:$DISTRO-dev .
+DOCKER_BUILDKIT=1 docker build --target full $1 $2 $PARAMS -t $DOCKER_ID/vulcanexus:$DISTRO-full .

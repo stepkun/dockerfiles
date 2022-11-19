@@ -23,8 +23,9 @@ ARG TIMEZONE
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install basic necesseties
+# Install basic necessities
 RUN apt-get update \
+  && apt-get upgrade -y \
   && apt-get install -y \
     apt-utils \
     locales \
