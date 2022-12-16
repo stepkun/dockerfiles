@@ -123,6 +123,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Add development packages
 RUN apt-get update \
   && apt-get install -y \
+    ros-dev-tools \
     bash-completion \
     gdb \
     git \
