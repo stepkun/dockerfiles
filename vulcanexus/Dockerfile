@@ -202,5 +202,5 @@ RUN wget -qO- https://cyberbotics.com/Cyberbotics.asc | apt-key add - \
 
 ENV TZ=$TIMEZONE \
     WEBOTS_HOME=/usr/local/webots \
-    PATH=/usr/local/webots:$PATH \
+    PATH=/usr/local/webots:${PATH} \
     DEBIAN_FRONTEND=dialog
