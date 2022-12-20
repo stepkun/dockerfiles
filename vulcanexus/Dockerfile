@@ -201,6 +201,7 @@ RUN wget -qO- https://cyberbotics.com/Cyberbotics.asc | apt-key add - \
   && rm -rf /var/lib/apt/lists/*
 
 ENV TZ=$TIMEZONE \
+    QTWEBENGINE_DISABLE_SANDBOX=1 \
     WEBOTS_HOME=/usr/local/webots \
     PATH=/usr/local/webots:${PATH} \
     DEBIAN_FRONTEND=dialog
