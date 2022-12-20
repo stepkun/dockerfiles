@@ -33,6 +33,7 @@ RUN apt-get update \
     tzdata \
     vim \
     xterm \
+    python-is-python3 \
   && locale-gen $LANGUAGE \
   && update-locale LC_ALL=$LANGUAGE LANG=$LANGUAGE \
   && dpkg-reconfigure --frontend noninteractive tzdata \
@@ -172,4 +173,33 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 ENV TZ=$TIMEZONE \
+    DEBIAN_FRONTEND=dialog
+
+######################################
+# Full desktop image including webots
+######################################
+FROM full AS sim
+
+# use global args
+ARG ROS_DISTRO
+ARG TIMEZONE
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Add development packages
+RUN wget -qO- https://cyberbotics.com/Cyberbotics.asc | apt-key add - \
+  && echo "deb https://cyberbotics.com/debian/ binary-amd64/" | tee /etc/apt/sources.list.d/webots.list > /dev/null \
+  && apt-get update \
+  && apt-get install -y \
+    webots \
+  # install urdf to proto converter
+  && pip install urdf2webots \
+  # Cleanup
+  && apt-get autoremove -y \
+  && apt-get clean -y \
+  && rm -rf /var/lib/apt/lists/*
+
+ENV TZ=$TIMEZONE \
+    WEBOTS_HOME=/usr/local/webots \
+    PATH=/usr/local/webots:$PATH \
     DEBIAN_FRONTEND=dialog
