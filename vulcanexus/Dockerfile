@@ -173,6 +173,7 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 ENV TZ=$TIMEZONE \
+    LD_LIBRARY_PATH=/opt/ros/$ROS_DISTRO/lib/controller \
     DEBIAN_FRONTEND=dialog
 
 ######################################
