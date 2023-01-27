@@ -163,10 +163,12 @@ ARG TIMEZONE
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Add development packages
+# Add desktop packages
 RUN apt-get update \
   && apt-get install -y \
     vulcanexus-$ROS_DISTRO-desktop \
+  # install urdf to proto converter
+  && pip install urdf2webots \
   # Cleanup
   && apt-get autoremove -y \
   && apt-get clean -y \
@@ -186,15 +188,13 @@ ARG TIMEZONE
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Add development packages
+# Add webots packages
 RUN wget -qO- https://cyberbotics.com/Cyberbotics.asc | apt-key add - \
   && echo "deb https://cyberbotics.com/debian/ binary-amd64/" | tee /etc/apt/sources.list.d/webots.list > /dev/null \
   && apt-get update \
   && apt-get install -y \
     xvfb \
     webots \
-  # install urdf to proto converter
-  && pip install urdf2webots \
   # Cleanup
   && apt-get autoremove -y \
   && apt-get clean -y \
