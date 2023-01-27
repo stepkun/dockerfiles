@@ -172,8 +172,8 @@ RUN apt-get update \
   && apt-get clean -y \
   && rm -rf /var/lib/apt/lists/*
 
-ENV TZ=$TIMEZONE \
-    LD_LIBRARY_PATH=/opt/ros/$ROS_DISTRO/lib/controller \
+ENV LD_LIBRARY_PATH=/opt/ros/$ROS_DISTRO/lib/controller \
+    TZ=$TIMEZONE \
     DEBIAN_FRONTEND=dialog
 
 ######################################
@@ -182,7 +182,6 @@ ENV TZ=$TIMEZONE \
 FROM full AS sim
 
 # use global args
-ARG ROS_DISTRO
 ARG TIMEZONE
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -201,8 +200,8 @@ RUN wget -qO- https://cyberbotics.com/Cyberbotics.asc | apt-key add - \
   && apt-get clean -y \
   && rm -rf /var/lib/apt/lists/*
 
-ENV TZ=$TIMEZONE \
+ENV PATH=/usr/local/webots:$PATH \
     QTWEBENGINE_DISABLE_SANDBOX=1 \
+    TZ=$TIMEZONE \
     WEBOTS_HOME=/usr/local/webots \
-    PATH=/usr/local/webots:${PATH} \
     DEBIAN_FRONTEND=dialog
