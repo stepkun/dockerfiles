@@ -78,6 +78,9 @@ RUN apt-get update \
     vulcanexus-$ROS_DISTRO-core \
     vulcanexus-$ROS_DISTRO-micro \
     vulcanexus-$ROS_DISTRO-cloud \
+    # also install demo nodes for testing purposes
+    ros-humble-demo-nodes-cpp \
+    ros-humble-demo-nodes-py \
   # add non-root user as defined above
   && groupadd --gid $USER_GID $USERNAME \
   && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
