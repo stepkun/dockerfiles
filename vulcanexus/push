@@ -5,5 +5,5 @@ DOCKER_ID=stepkun
 docker login
 docker push $DOCKER_ID/vulcanexus:humble-run
 docker push $DOCKER_ID/vulcanexus:humble-dev
-docker push $DOCKER_ID/vulcanexus:humble-full
 docker push $DOCKER_ID/vulcanexus:humble-sim
+docker push $DOCKER_ID/vulcanexus:humble-full
