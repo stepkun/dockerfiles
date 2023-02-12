@@ -156,9 +156,9 @@ ENV AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=1 \
     DEBIAN_FRONTEND=dialog
 
 ######################################
-# Full desktop image
+# Simulation image
 ######################################
-FROM dev AS full
+FROM dev AS sim
 
 # use global args
 ARG ROS_DISTRO
@@ -166,10 +166,10 @@ ARG TIMEZONE
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Add desktop packages
+# Add simulation packages
 RUN apt-get update \
   && apt-get install -y \
-    vulcanexus-$ROS_DISTRO-desktop \
+    vulcanexus-$ROS_DISTRO-simulation \
   # install urdf to proto converter
   && pip install urdf2webots \
   # Cleanup
@@ -182,29 +182,25 @@ ENV LD_LIBRARY_PATH=/opt/ros/$ROS_DISTRO/lib/controller \
     DEBIAN_FRONTEND=dialog
 
 ######################################
-# Full desktop image including webots
+# Full desktop image
 ######################################
-FROM full AS sim
+FROM sim AS full
 
 # use global args
 ARG TIMEZONE
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Add webots packages
-RUN wget -qO- https://cyberbotics.com/Cyberbotics.asc | apt-key add - \
-  && echo "deb https://cyberbotics.com/debian/ binary-amd64/" | tee /etc/apt/sources.list.d/webots.list > /dev/null \
-  && apt-get update \
+# Add ros2/vulcanexus desktop packages
+RUN apt-get update \
   && apt-get install -y \
-    xvfb \
-    webots \
+# needed?
+#    xvfb \
+    vulcanexus-$ROS_DISTRO-desktop \
   # Cleanup
   && apt-get autoremove -y \
   && apt-get clean -y \
   && rm -rf /var/lib/apt/lists/*
 
-ENV PATH=/usr/local/webots:$PATH \
-    QTWEBENGINE_DISABLE_SANDBOX=1 \
-    TZ=$TIMEZONE \
-    WEBOTS_HOME=/usr/local/webots \
+ENV TZ=$TIMEZONE \
     DEBIAN_FRONTEND=dialog
