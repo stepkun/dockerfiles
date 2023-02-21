@@ -37,6 +37,9 @@ RUN apt-get update \
     alsa-base \
     alsa-utils \
     libsndfile1-dev \
+    libpulse0 \
+    libasound2 \
+    libasound2-plugins \
   && locale-gen $LANGUAGE \
   && update-locale LC_ALL=$LANGUAGE LANG=$LANGUAGE \
   && dpkg-reconfigure --frontend noninteractive tzdata \

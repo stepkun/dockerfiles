@@ -26,5 +26,5 @@ PARAMS="--build-arg ROS_DISTRO=$DISTRO \
 # creation of all layers for top package "full" with --no-cache, than build packages below that
 DOCKER_BUILDKIT=1 docker build --no-cache --target full $PARAMS -t $DOCKER_ID/vulcanexus:$DISTRO-full .
 DOCKER_BUILDKIT=1 docker build --target sim $PARAMS -t $DOCKER_ID/vulcanexus:$DISTRO-sim .
-DOCKER_BUILDKIT=1 docker build --target dev  $PARAMS -t $DOCKER_ID/vulcanexus:$DISTRO-dev .
-DOCKER_BUILDKIT=1 docker build --target run  $PARAMS -t $DOCKER_ID/vulcanexus:$DISTRO-run .
+DOCKER_BUILDKIT=1 docker build --target dev $PARAMS -t $DOCKER_ID/vulcanexus:$DISTRO-dev .
+DOCKER_BUILDKIT=1 docker build --target run $PARAMS -t $DOCKER_ID/vulcanexus:$DISTRO-run .
