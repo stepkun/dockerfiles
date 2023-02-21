@@ -34,6 +34,9 @@ RUN apt-get update \
     vim \
     xterm \
     python-is-python3 \
+    alsa-base \
+    alsa-utils \
+    libsndfile1-dev \
   && locale-gen $LANGUAGE \
   && update-locale LC_ALL=$LANGUAGE LANG=$LANGUAGE \
   && dpkg-reconfigure --frontend noninteractive tzdata \
