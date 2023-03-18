@@ -34,12 +34,9 @@ RUN apt-get update \
     vim \
     xterm \
     python-is-python3 \
-    alsa-base \
+    pulseaudio \
     alsa-utils \
-    libsndfile1-dev \
-    libpulse0 \
-    libasound2 \
-    libasound2-plugins \
+    tmux \
   && locale-gen $LANGUAGE \
   && update-locale LC_ALL=$LANGUAGE LANG=$LANGUAGE \
   && dpkg-reconfigure --frontend noninteractive tzdata \
@@ -144,6 +141,7 @@ RUN apt-get update \
     python3-vcstool \
     sudo \
     wget \
+    terminator \
     vulcanexus-$ROS_DISTRO-tools \
   && rosdep init || echo "rosdep already initialized" \
   # Update pydocstyle
