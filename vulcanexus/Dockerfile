@@ -37,6 +37,7 @@ RUN apt-get update \
     pulseaudio \
     alsa-utils \
     tmux \
+    iputils-ping \
   && locale-gen $LANGUAGE \
   && update-locale LC_ALL=$LANGUAGE LANG=$LANGUAGE \
   && dpkg-reconfigure --frontend noninteractive tzdata \
