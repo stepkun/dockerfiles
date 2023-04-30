@@ -1,6 +1,0 @@
-#!/bin/bash
-# change DOCKER_ID to your value
-DOCKER_ID=stepkun
-
-docker login
-docker push $DOCKER_ID/rmf:humble-demos

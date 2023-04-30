@@ -1,6 +1,0 @@
-# files not to be in build context
-.dockerignore
-Dockerfile
-*.Dockerfile
-build
-push
