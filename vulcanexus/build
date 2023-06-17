@@ -3,16 +3,16 @@
 # change DOCKER_ID to your value
 DOCKER_ID=stepkun
 
-# set wanted distro
-DISTRO=humble
-UBUNTU=22.04
-
 # usable parameters:
 LANGUAGE=de_DE.UTF-8
 TIMEZONE="Europe/Berlin"
 USERNAME=ros
 USER_UID=1000
 USER_GID=$USER_UID
+
+# set wanted distro "humble" and related ubuntu version
+DISTRO=humble
+UBUNTU=22.04
 
 # create param string from wanted values
 PARAMS="--build-arg ROS_DISTRO=$DISTRO \
@@ -28,3 +28,21 @@ DOCKER_BUILDKIT=1 docker build --no-cache --target full $PARAMS -t $DOCKER_ID/vu
 DOCKER_BUILDKIT=1 docker build --target sim $PARAMS -t $DOCKER_ID/vulcanexus:$DISTRO-sim .
 DOCKER_BUILDKIT=1 docker build --target dev $PARAMS -t $DOCKER_ID/vulcanexus:$DISTRO-dev .
 DOCKER_BUILDKIT=1 docker build --target run $PARAMS -t $DOCKER_ID/vulcanexus:$DISTRO-run .
+
+# set wanted distro "iron" and related ubuntu version
+#DISTRO=iron
+#UBUNTU=22.04
+
+# create param string from wanted values
+#PARAMS="--build-arg ROS_DISTRO=$DISTRO \
+#        --build-arg UBUNTU_VERSION=$UBUNTU \
+#        --build-arg LANGUAGE=$LANGUAGE \
+#        --build-arg TIMEZONE=$TIMEZONE \
+#        --build-arg USERNAME=$USERNAME \
+#        --build-arg USER_UID=$USER_UID \
+#        --build-arg USER_GID=$USER_GID"
+
+#DOCKER_BUILDKIT=1 docker build --no-cache --target full $PARAMS -t $DOCKER_ID/vulcanexus:$DISTRO-full .
+#DOCKER_BUILDKIT=1 docker build --target sim $PARAMS -t $DOCKER_ID/vulcanexus:$DISTRO-sim .
+#DOCKER_BUILDKIT=1 docker build --target dev $PARAMS -t $DOCKER_ID/vulcanexus:$DISTRO-dev .
+#DOCKER_BUILDKIT=1 docker build --target run $PARAMS -t $DOCKER_ID/vulcanexus:$DISTRO-run .

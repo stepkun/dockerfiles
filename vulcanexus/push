@@ -7,3 +7,8 @@ docker push $DOCKER_ID/vulcanexus:humble-run
 docker push $DOCKER_ID/vulcanexus:humble-dev
 docker push $DOCKER_ID/vulcanexus:humble-sim
 docker push $DOCKER_ID/vulcanexus:humble-full
+
+#docker push $DOCKER_ID/vulcanexus:iron-run
+#docker push $DOCKER_ID/vulcanexus:iron-dev
+#docker push $DOCKER_ID/vulcanexus:iron-sim
+#docker push $DOCKER_ID/vulcanexus:iron-full
