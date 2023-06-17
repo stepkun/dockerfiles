@@ -1,17 +1,17 @@
 # syntax=docker/dockerfile:1
 
-# global configuration values
+# set global configuration values from environment
 # wanted ros distro and corresponding ubuntu version
 ARG ROS_DISTRO=$DISTRO
 ARG UBUNTU_VERSION=$UBUNTU
 # wanted language
-ARG LANGUAGE=de_DE.UTF-8
+ARG LANGUAGE=$LANGUAGE
 # wanted timezone
-ARG TIMEZONE="Europe/Berlin"
-# non-root user "ros"
-ARG USERNAME=ros
-ARG USER_UID=1000
-ARG USER_GID=$USER_UID
+ARG TIMEZONE=$TIMEZONE
+# non-root user
+ARG USERNAME=$USERNAME
+ARG USER_UID=$USER_UID
+ARG USER_GID=$USER_GID
 
 ######################################
 # Localized image

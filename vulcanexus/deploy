@@ -1,0 +1,38 @@
+#!/bin/bash
+
+set -e
+
+# change DOCKER_ID to your value
+DOCKER_ID=stepkun
+DOCKER_PATH=$DOCKER_ID/vulcanexus
+# usable parameters:
+LANGUAGE=de_DE.UTF-8
+TIMEZONE="Europe/Berlin"
+USERNAME=ros
+USER_UID=1000
+USER_GID=$USER_UID
+
+# ubuntu version
+UBUNTU=22.04
+# related distros to that ubuntu version
+DISTROS='humble'
+TARGETS='run dev sim full'
+
+for DISTRO in $DISTROS
+do
+        # create param string from wanted values
+        PARAMS="--build-arg ROS_DISTRO=$DISTRO \
+                --build-arg UBUNTU_VERSION=$UBUNTU \
+                --build-arg LANGUAGE=$LANGUAGE \
+                --build-arg TIMEZONE=$TIMEZONE \
+                --build-arg USERNAME=$USERNAME \
+                --build-arg USER_UID=$USER_UID \
+                --build-arg USER_GID=$USER_GID"
+        
+        # creation of all layers bottom up and direct push
+        for TARGET in $TARGETS
+        do
+                DOCKER_BUILDKIT=1 docker build --target $TARGET $PARAMS -t $DOCKER_PATH:$DISTRO-$TARGET .
+                docker push $DOCKER_PATH:$DISTRO-$TARGET
+        done
+done
