@@ -4,3 +4,4 @@ Dockerfile
 *.Dockerfile
 build
 push
+deploy
