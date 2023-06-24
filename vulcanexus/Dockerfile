@@ -82,6 +82,9 @@ RUN apt-get update \
     vulcanexus-$ROS_DISTRO-core \
     vulcanexus-$ROS_DISTRO-micro \
     vulcanexus-$ROS_DISTRO-cloud \
+    # install ros2_control
+    ros-$ROS_DISTRO-ros2-control \
+    ros-$ROS_DISTRO-ros2-controllers \
     # also install demo nodes for testing purposes
     ros-$ROS_DISTRO-demo-nodes-cpp \
     ros-$ROS_DISTRO-demo-nodes-py \
@@ -171,10 +174,12 @@ ARG TIMEZONE
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Add simulation packages
+# Add simulation packages for both webots and gazebo
 RUN apt-get update \
   && apt-get install -y \
     vulcanexus-$ROS_DISTRO-simulation \
+    ros-$ROS_DISTRO-gazebo-ros \
+    ros-$ROS_DISTRO-gazebo-ros2-control \
   # install urdf to proto converter
   && pip install urdf2webots \
   # Cleanup
