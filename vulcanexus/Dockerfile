@@ -116,7 +116,7 @@ ENV AMENT_PREFIX_PATH=/opt/vulcanexus/$ROS_DISTRO:/opt/ros/$ROS_DISTRO \
     DEBIAN_FRONTEND=dialog
 
 # change startup user to ros
-CMD su ros
+CMD su $USERNAME
 
 
 ######################################

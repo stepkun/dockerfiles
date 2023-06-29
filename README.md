@@ -13,8 +13,9 @@ Available targets are:
 
 All targets include the necessary ROS2 packages.<br>
 
-### Build:
-To build them all, run script "build" in this directory.<br>
+### Build & Push:
+Please change DOCKER_ID in script to your Docker ID<br>
+To build and push them all, run script "deploy" in this directory.<br>
 Please change DOCKER_ID in script to your Docker ID<br>
 <br>
 To build an individual target use
@@ -30,11 +31,6 @@ docker build \
     --target <target> \
     -t <dockerID>/vulcanexus:humble-<target> -f Dockerfile .
 ```
-There are defaults for the `--build-args` which fit for ROS2 Humble in Europe/Berlin Germany with a ros-user `ros`!
-
-### Push:
-To push them all to docker hub, run script "push" in this directory<br>
-Please change DOCKER_ID in script to your Docker ID<br>
 <br>
 To push a single image use
 ```
