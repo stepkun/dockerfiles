@@ -7,8 +7,9 @@ Vulcanexus is an All-in-One ROS2 tool set. See  https://vulcanexus.org
 ### Targets:
 Available targets are:
 - run = image to run applications based on Vulcanexus
-- dev = basic development image without Vulcanexus desktop tools
-- full = development image including all Vulcanexus desktop tools
+- dev = basic development image without Vulcanexus desktop and simulation tools
+- sim = development image including all Vulcanexus simulation tools
+- full = development image including all Vulcanexus desktop and simulation tools
 
 All targets include the necessary ROS2 packages.<br>
 
