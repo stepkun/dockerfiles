@@ -125,7 +125,7 @@ CMD su $USERNAME
 FROM run AS dev
 
 # use global args
-#ARG ROS_DISTRO
+ARG ROS_DISTRO
 ARG TIMEZONE
 ARG USERNAME
 
@@ -178,8 +178,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
   && apt-get install -y \
     vulcanexus-$ROS_DISTRO-simulation \
-    ros-$ROS_DISTRO-gazebo-ros \
-    ros-$ROS_DISTRO-gazebo-ros2-control \
+#    ros-$ROS_DISTRO-gazebo-ros \
+#    ros-$ROS_DISTRO-gazebo-ros2-control \
   # install urdf to proto converter
   && pip install urdf2webots \
   # Cleanup
