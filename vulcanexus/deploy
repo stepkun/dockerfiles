@@ -46,7 +46,7 @@ do
         # creation of all layers bottom up and direct push
         for TARGET in $TARGETS
         do
-                DOCKER_BUILDKIT=1 docker build --platform $PLATFORM --target $TARGET $PARAMS --tag $DOCKER_PATH:$DISTRO-$TARGET .
+                DOCKER_BUILDKIT=1 docker build --platform=$PLATFORM --target=$TARGET $PARAMS --tag=$DOCKER_PATH:$DISTRO-$TARGET .
                 docker push $DOCKER_PATH:$DISTRO-$TARGET
         done
 done
