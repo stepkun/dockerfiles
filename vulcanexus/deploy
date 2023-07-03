@@ -12,19 +12,12 @@ USERNAME=ros
 USER_UID=1000
 USER_GID=$USER_UID
 
-ARCH="`uname -m`"
-PLATFORM="linux/amd64"
+# before running this script you should have installed docker multiplattform support
+# on amd64 this can be done with the following two commands:
+# sudo docker run --privileged --rm tonistiigi/binfmt --install arm64
+# docker buildx create --use
 
-if [ $ARCH == "x86_64" ]
-then
-        PLATFORM="linux/amd64"
-elif [ $ARCH == "aarch64" ]
-then
-        PLATFORM="linux/arm64"
-else
-        echo "unsupported platform $ARCH"
-        exit
-fi
+PLATFORM="linux/arm64,linux/amd64"
 
 # ubuntu version
 UBUNTU=22.04
@@ -46,7 +39,6 @@ do
         # creation of all layers bottom up and direct push
         for TARGET in $TARGETS
         do
-                DOCKER_BUILDKIT=1 docker build --platform=$PLATFORM --target=$TARGET $PARAMS --tag=$DOCKER_PATH:$DISTRO-$TARGET .
-                docker push $DOCKER_PATH:$DISTRO-$TARGET
+                docker buildx build --push --platform=$PLATFORM --target=$TARGET $PARAMS --tag=$DOCKER_PATH:$DISTRO-$TARGET .
         done
 done
