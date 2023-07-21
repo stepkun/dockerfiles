@@ -146,6 +146,7 @@ RUN apt-get update \
     sudo \
     wget \
     terminator \
+    valgrind \
     vulcanexus-${ROS_DISTRO}-tools \
   && rosdep init || echo "rosdep already initialized" \
   # Update pydocstyle
