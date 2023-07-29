@@ -17,12 +17,12 @@ USER_GID=$USER_UID
 # sudo docker run --privileged --rm tonistiigi/binfmt --install arm64
 # docker buildx create --use
 
-PLATFORM="linux/arm64,linux/amd64"
+PLATFORMS="linux/arm64,linux/amd64"
 
 # ubuntu version
 UBUNTU=22.04
 # related distros to that ubuntu version
-DISTROS='humble'
+DISTROS='humble iron'
 TARGETS='run dev sim full'
 
 for DISTRO in $DISTROS
@@ -39,6 +39,6 @@ do
         # creation of all layers bottom up and direct push
         for TARGET in $TARGETS
         do
-                docker buildx build --push --platform=$PLATFORM --target=$TARGET $PARAMS --tag=$DOCKER_PATH:$DISTRO-$TARGET .
+                docker buildx build --push --platform=$PLATFORMS --target=$TARGET $PARAMS --tag=$DOCKER_PATH:$DISTRO-$TARGET .
         done
 done
