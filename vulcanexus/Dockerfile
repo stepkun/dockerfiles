@@ -14,18 +14,22 @@ ARG USER_UID=${USER_UID}
 ARG USER_GID=${USER_GID}
 
 ######################################
-# Localized image
+# Runtime image
 ######################################
-FROM ubuntu:${UBUNTU_VERSION} AS localized
+FROM ubuntu:${UBUNTU_VERSION} AS run
 
+# use global args
 ARG LANGUAGE
 ARG TIMEZONE
+ARG ROS_DISTRO
+ARG USERNAME
+ARG USER_UID
+ARG USER_GID
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install basic necessities
+# Install Base package of Vulcanexus which is including ROS2
 RUN apt-get update \
-  && apt-get upgrade -y \
   && apt-get install -y \
     apt-utils \
     locales \
@@ -38,42 +42,13 @@ RUN apt-get update \
     alsa-utils \
     tmux \
     iputils-ping \
-  && locale-gen ${LANGUAGE} \
-  && update-locale LC_ALL=${LANGUAGE} LANG=${LANGUAGE} \
-  && dpkg-reconfigure --frontend noninteractive tzdata \
-  # Cleanup
-  && apt-get autoremove -y \
-  && apt-get clean -y \
-  && rm -rf /var/lib/apt/lists/*
-
-# set language and timezone
-ENV LANG=${LANGUAGE} \
-    LANGUAGE=${LANGUAGE} \
-    LC_ALL=${LANGUAGE} \
-    TZ=${TIMEZONE} \
-    DEBIAN_FRONTEND=dialog
-
-######################################
-# Runtime image
-######################################
-FROM localized AS run
-
-# use global args
-ARG ROS_DISTRO
-ARG TIMEZONE
-ARG USERNAME
-ARG USER_UID
-ARG USER_GID
-
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Install Base package of Vulcanexus which is including ROS2
-RUN apt-get update \
-  && apt-get install -y \
     sudo \
     curl \
     gnupg2 \
     lsb-release \
+  && locale-gen ${LANGUAGE} \
+  && update-locale LC_ALL=${LANGUAGE} LANG=${LANGUAGE} \
+  && dpkg-reconfigure --frontend noninteractive tzdata \
   && curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg \
   && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null \
   && curl -sSL https://raw.githubusercontent.com/eProsima/vulcanexus/main/vulcanexus.key -o /usr/share/keyrings/vulcanexus-archive-keyring.gpg \
@@ -99,7 +74,11 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 # set environment for Vulcanexus/ROS2
-ENV AMENT_PREFIX_PATH=/opt/vulcanexus/${ROS_DISTRO}:/opt/ros/${ROS_DISTRO} \
+ENV LANG=${LANGUAGE} \
+    LANGUAGE=${LANGUAGE} \
+    LC_ALL=${LANGUAGE} \
+    TZ=${TIMEZONE} \
+    AMENT_PREFIX_PATH=/opt/vulcanexus/${ROS_DISTRO}:/opt/ros/${ROS_DISTRO} \
     CMAKE_PREFIX_PATH=/opt/vulcanexus/${ROS_DISTRO} \
     COLCON_PREFIX_PATH=/opt/vulcanexus/${ROS_DISTRO} \
     LD_LIBRARY_PATH=/opt/vulcanexus/${ROS_DISTRO}/lib:/opt/ros/${ROS_DISTRO}/opt/rviz_ogre_vendor/lib:/opt/ros/${ROS_DISTRO}/lib/x86_64-linux-gnu:/opt/ros/${ROS_DISTRO}/lib \
