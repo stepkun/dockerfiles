@@ -1,7 +1,7 @@
+# Copyright (c) 2022-2023 Stephan Kunz
 # files not to be in build context
 .dockerignore
 Dockerfile
 *.Dockerfile
-build
-push
+localbuild
 deploy

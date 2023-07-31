@@ -1,4 +1,5 @@
 # syntax=docker/dockerfile:1
+# Copyright (c) 2022-2023 Stephan Kunz
 
 # set global configuration values from environment
 # wanted ros distro and corresponding ubuntu version

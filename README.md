@@ -14,11 +14,14 @@ Available targets are:
 All targets include the necessary ROS2 packages.<br>
 
 ### Build & Push:
-Please change DOCKER_ID in script to your Docker ID<br>
 To build and push them all, run script "deploy" in this directory.<br>
 Please change DOCKER_ID in script to your Docker ID<br>
 <br>
-To build an individual target use
+For a local build without pushing there is the script "localbuild".<br>
+Please change DOCKER_ID in script to your Docker ID<br>
+**Do not** push local build images, as these will overwrite and destroy the multiplatform images built by "deploy".<br>
+<br>
+To build an individual target locally use
 ```
 docker build \
     --build-arg ROS_DISTRO=<ros-distro> \
@@ -30,12 +33,6 @@ docker build \
     --build-arg USER_GID=<ros-user_user-id>"
     --target <target> \
     -t <dockerID>/vulcanexus:humble-<target> -f Dockerfile .
-```
-<br>
-To push a single image use
-```
-docker login<br>
-docker push <dockerID>/vulcanexus:humble-<target>
 ```
 
 ### Run:
