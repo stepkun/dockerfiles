@@ -70,6 +70,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Install Base package of Vulcanexus which is including ROS2
 RUN apt-get update \
   && apt-get install -y \
+    sudo \
     curl \
     gnupg2 \
     lsb-release \
@@ -82,15 +83,15 @@ RUN apt-get update \
     vulcanexus-${ROS_DISTRO}-core \
     vulcanexus-${ROS_DISTRO}-micro \
     vulcanexus-${ROS_DISTRO}-cloud \
-    # install ros2_control
-    ros-${ROS_DISTRO}-ros2-control \
-    ros-${ROS_DISTRO}-ros2-controllers \
     # also install demo nodes for testing purposes
     ros-${ROS_DISTRO}-demo-nodes-cpp \
     ros-${ROS_DISTRO}-demo-nodes-py \
   # add non-root user as defined above
   && groupadd --gid ${USER_GID} ${USERNAME} \
   && useradd -s /bin/bash --uid ${USER_UID} --gid ${USER_GID} -m ${USERNAME} \
+  # Add sudo support for the non-root user
+  && echo ${USERNAME} ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/${USERNAME}\
+  && chmod 0440 /etc/sudoers.d/${USERNAME} \
   && echo "if [ -f /opt/vulcanexus/${ROS_DISTRO}/setup.bash ]; then source /opt/vulcanexus/${ROS_DISTRO}/setup.bash; fi" >> /home/${USERNAME}/.bashrc \
   # Cleanup
   && apt-get autoremove -y \
@@ -143,7 +144,6 @@ RUN apt-get update \
     python3-colcon-common-extensions \
     python3-rosdep \
     python3-vcstool \
-    sudo \
     wget \
     terminator \
     valgrind \
@@ -151,9 +151,6 @@ RUN apt-get update \
   && rosdep init || echo "rosdep already initialized" \
   # Update pydocstyle
   && pip install --upgrade pydocstyle \
-  # Add sudo support for the non-root user
-  && echo ${USERNAME} ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/${USERNAME}\
-  && chmod 0440 /etc/sudoers.d/${USERNAME} \
   && echo "source /usr/share/bash-completion/completions/git" >> /home/${USERNAME}/.bashrc \
   # Cleanup
   && apt-get autoremove -y \
