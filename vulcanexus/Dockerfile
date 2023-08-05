@@ -122,22 +122,38 @@ RUN apt-get update \
     pylint \
     python3-autopep8 \
     python3-colcon-common-extensions \
+    python3-colcon-mixin \
     python3-rosdep \
     python3-vcstool \
     wget \
     terminator \
     valgrind \
     vulcanexus-${ROS_DISTRO}-tools \
+    ccache \
+  # increase cache size
+  && ccache -M 20G \
   && rosdep init || echo "rosdep already initialized" \
   # Update pydocstyle
   && pip install --upgrade pydocstyle \
   && echo "source /usr/share/bash-completion/completions/git" >> /home/${USERNAME}/.bashrc \
+  && colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml \
+  && colcon mixin update default \
   # Cleanup
   && apt-get autoremove -y \
   && apt-get clean -y \
   && rm -rf /var/lib/apt/lists/*
 
+# build colcon sanitize environment
+RUN git clone https://github.com/colcon/colcon-sanitizer-reports.git \
+  && cd colcon-sanitizer-reports \
+  && python3 setup.py install \
+  && cd .. \
+  && rm -fR colcon-sanitizer-reports
+
+# set environment variables
 ENV AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=1 \
+    CC=/usr/lib/ccache/gcc \
+    CXX=/usr/lib/ccache/g++ \
     TZ=${TIMEZONE} \
     DEBIAN_FRONTEND=dialog
 
