@@ -133,15 +133,16 @@ RUN apt-get update \
     ccache \
   # increase cache size
   && ccache -M 20G \
-  # set owner of cache
+  # create and set owner of cache
+  && mkdir -p /run/user/${USER_UID} \
   && chown ${USER_UID} /run/user/${USER_UID} \
   && chgrp ${USER_GID} /run/user/${USER_UID} \
-  && rosdep init || echo "rosdep already initialized" \
   # Update pydocstyle
   && pip install --upgrade pydocstyle \
   && echo "source /usr/share/bash-completion/completions/git" >> /home/${USERNAME}/.bashrc \
   && colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml \
   && colcon mixin update default \
+  && rosdep init || echo "rosdep already initialized" \
   # Cleanup
   && apt-get autoremove -y \
   && apt-get clean -y \
@@ -152,7 +153,9 @@ RUN git clone https://github.com/colcon/colcon-sanitizer-reports.git \
   && cd colcon-sanitizer-reports \
   && python3 setup.py install \
   && cd .. \
-  && rm -fR colcon-sanitizer-reports
+  && rm -fR colcon-sanitizer-reports \
+  && rosdep init || echo "rosdep already initialized"
+
 
 # set environment variables
 ENV AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=1 \
