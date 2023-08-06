@@ -93,7 +93,6 @@ ENV LANG=${LANGUAGE} \
     ROS_VERSION=2 \
     VULCANEXUS_DISTRO=${ROS_DISTRO} \
     VULCANEXUS_HOME=/opt/vulcanexus/${ROS_DISTRO} \
-    TZ=${TIMEZONE} \
     DEBIAN_FRONTEND=dialog
 
 # change startup user to ros
@@ -109,6 +108,8 @@ FROM run AS dev
 ARG ROS_DISTRO
 ARG TIMEZONE
 ARG USERNAME
+ARG USER_UID
+ARG USER_GID
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -132,6 +133,9 @@ RUN apt-get update \
     ccache \
   # increase cache size
   && ccache -M 20G \
+  # set owner of cache
+  && chown ${USER_UID} /run/user/${USER_UID} \
+  && chgrp ${USER_GID} /run/user/${USER_UID} \
   && rosdep init || echo "rosdep already initialized" \
   # Update pydocstyle
   && pip install --upgrade pydocstyle \
