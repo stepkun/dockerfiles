@@ -149,8 +149,6 @@ RUN git clone https://github.com/colcon/colcon-sanitizer-reports.git \
 
 # set environment variables
 ENV AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=1 \
-    CC=/usr/lib/ccache/gcc \
-    CXX=/usr/lib/ccache/g++ \
     TZ=${TIMEZONE} \
     DEBIAN_FRONTEND=dialog
 
