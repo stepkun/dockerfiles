@@ -188,6 +188,7 @@ ENV LD_LIBRARY_PATH=/opt/ros/${ROS_DISTRO}/lib/controller \
 FROM sim AS full
 
 # use global args
+ARG ROS_DISTRO
 ARG TIMEZONE
 
 ENV DEBIAN_FRONTEND=noninteractive
