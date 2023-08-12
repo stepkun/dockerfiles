@@ -108,8 +108,6 @@ FROM run AS dev
 ARG ROS_DISTRO
 ARG TIMEZONE
 ARG USERNAME
-ARG USER_UID
-ARG USER_GID
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -130,13 +128,6 @@ RUN apt-get update \
     terminator \
     valgrind \
     vulcanexus-${ROS_DISTRO}-tools \
-    ccache \
-  # increase cache size
-  && ccache -M 20G \
-  # create and set owner of cache
-  && mkdir -p /run/user/${USER_UID} \
-  && chown ${USER_UID} /run/user/${USER_UID} \
-  && chgrp ${USER_GID} /run/user/${USER_UID} \
   # Update pydocstyle
   && pip install --upgrade pydocstyle \
   && echo "source /usr/share/bash-completion/completions/git" >> /home/${USERNAME}/.bashrc \
@@ -155,7 +146,6 @@ RUN git clone https://github.com/colcon/colcon-sanitizer-reports.git \
   && cd .. \
   && rm -fR colcon-sanitizer-reports \
   && rosdep init || echo "rosdep already initialized"
-
 
 # set environment variables
 ENV AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=1 \
