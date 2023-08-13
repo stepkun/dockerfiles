@@ -106,9 +106,9 @@ WORKDIR /home/$USERNAME
 
 
 ######################################
-# Developer image arm64
+# Developer image
 ######################################
-FROM --platform=linux/arm64 run AS dev
+FROM run AS dev
 
 # use global args
 ARG ROS_DISTRO
@@ -129,55 +129,6 @@ RUN apt-get update && apt-get install -y \
     pylint \
     python3-autopep8 \
     python3-colcon-common-extensions \
-    python3-rosdep \
-    python3-rosdep2 \
-    python3-vcstool \
-    ros-dev-tools \
-    terminator \
-    valgrind \
-    vulcanexus-$ROS_DISTRO-tools \
-  # Update pydocstyle
-  && pip install --upgrade pydocstyle \
-  && rosdep init || echo "rosdep already initialized" \
-  # Cleanup
-  && apt-get autoremove -y \
-  && apt-get clean -y \
-  && rm -rf /var/lib/apt/lists/*
-
-# set environment variables
-ENV AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=1 \
-    TZ=$TIMEZONE \
-    DEBIAN_FRONTEND=
-
-USER $USERNAME
-WORKDIR /home/$USERNAME
-
-
-######################################
-# Developer image amd64
-######################################
-FROM --platform=linux/amd64 run AS dev
-
-# use global args
-ARG ROS_DISTRO
-ARG TIMEZONE
-ARG USERNAME
-
-USER root
-
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Add development packages
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    cmake \
-    gdb \
-    git \
-    openssh-client \
-    pylint \
-    python3-autopep8 \
-    python3-colcon-common-extensions \
-    python3-rosdep \
     python3-rosdep2 \
     python3-vcstool \
     ros-dev-tools \
@@ -193,7 +144,6 @@ USER $USERNAME
 WORKDIR /home/$USERNAME
 
 RUN sudo apt-get install -y python3-colcon-mixin \
-  && sudo rosdep init || echo "rosdep already initialized" \
   && colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml \
   && colcon mixin update default \
   && git clone https://github.com/colcon/colcon-sanitizer-reports.git \
@@ -206,9 +156,8 @@ RUN sudo apt-get install -y python3-colcon-mixin \
 # back to root
 USER root
 
-RUN rosdep init || echo "rosdep already initialized" \
-  # Cleanup
-  && apt-get autoremove -y \
+# Cleanup
+RUN apt-get autoremove -y \
   && apt-get clean -y \
   && rm -rf /var/lib/apt/lists/*
 
