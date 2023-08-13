@@ -1,6 +1,8 @@
 #!/bin/bash
 # Copyright (c) 2022-2023 Stephan Kunz
 set -e
+# clear output
+clear
 
 # change DOCKER_ID to your value
 DOCKER_ID=stepkun

@@ -1,6 +1,8 @@
 #!/bin/bash
 # Copyright (c) 2022-2023 Stephan Kunz
 set -e
+# clear output
+clear
 
 # change DOCKER_ID to your value
 DOCKER_ID=stepkun
@@ -32,8 +34,6 @@ TARGETS='run dev sim full'
 
 # ask for clearance of cache
 docker buildx prune
-# ensure login into docker hub
-docker login
 for DISTRO in $DISTROS
 do
         # create param string from wanted values

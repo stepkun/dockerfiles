@@ -148,26 +148,18 @@ RUN sudo apt-get install -y python3-colcon-mixin \
   && colcon mixin update default \
   && git clone https://github.com/colcon/colcon-sanitizer-reports.git \
   && cd colcon-sanitizer-reports \
-  && sudo python3 setup.py install
+  && sudo python3 setup.py install \
 #  && cd .. \
-#  && sudo rm -fR colcon-sanitizer-reports; \
-
-
-# back to root
-USER root
-
-# Cleanup
-RUN apt-get autoremove -y \
-  && apt-get clean -y \
-  && rm -rf /var/lib/apt/lists/*
+#  && sudo rm -fR colcon-sanitizer-reports \
+  # Cleanup
+  && sudo apt-get autoremove -y \
+  && sudo apt-get clean -y \
+  && sudo rm -rf /var/lib/apt/lists/*
 
 # set environment variables
 ENV AMENT_CPPCHECK_ALLOW_SLOW_VERSIONS=1 \
     TZ=$TIMEZONE \
     DEBIAN_FRONTEND=
-
-USER $USERNAME
-WORKDIR /home/$USERNAME
 
 
 ######################################
