@@ -26,6 +26,7 @@ UBUNTU=22.04
 DISTROS='humble iron'
 TARGETS='run dev sim full' # run dev sim full'
 
+docker buildx prune
 for DISTRO in $DISTROS
 do
         # create param string from wanted values
