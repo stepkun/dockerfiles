@@ -12,13 +12,20 @@ USERNAME=ros
 USER_UID=1000
 USER_GID=$USER_UID
 
+# before running this script you should have installed docker multiplattform support
+# on amd64 this can be done with the following two commands:
+# sudo docker run --privileged --rm tonistiigi/binfmt --install arm64 amd64
+# docker buildx create --use
+
+# currently locally only one platform at a time supported
+PLATFORMS="linux/amd64"
+
 # ubuntu version
 UBUNTU=22.04
 # related distros to that ubuntu version
 DISTROS='humble iron'
-TARGETS='run dev sim full'
+TARGETS='run dev sim full' # run dev sim full'
 
-# creation of all targets
 for DISTRO in $DISTROS
 do
         # create param string from wanted values
@@ -29,9 +36,10 @@ do
                 --build-arg USERNAME=$USERNAME \
                 --build-arg USER_UID=$USER_UID \
                 --build-arg USER_GID=$USER_GID"
-
+        
+        # creation of all layers bottom up and direct push
         for TARGET in $TARGETS
         do
-                DOCKER_BUILDKIT=1 docker build --target $TARGET $PARAMS -t $DOCKER_PATH:$DISTRO-$TARGET .
+                docker buildx build --load --platform=$PLATFORMS --target=$TARGET $PARAMS --tag=$DOCKER_PATH:$DISTRO-$TARGET .
         done
 done
