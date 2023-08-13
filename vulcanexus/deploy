@@ -27,6 +27,7 @@ TARGETS='run dev sim full'
 
 # ensure login into docker hub
 docker login
+docker buildx prune
 for DISTRO in $DISTROS
 do
         # create param string from wanted values
