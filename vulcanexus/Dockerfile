@@ -144,6 +144,7 @@ USER $USERNAME
 WORKDIR /home/$USERNAME
 
 RUN sudo apt-get install -y python3-colcon-mixin \
+  && sudo rosdep init \
   && colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml \
   && colcon mixin update default \
   && git clone https://github.com/colcon/colcon-sanitizer-reports.git \
