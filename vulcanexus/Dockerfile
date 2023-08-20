@@ -72,6 +72,8 @@ RUN apt-get update && apt-get install -y \
   # Add sudo support for the non-root user
   && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
   && chmod 0440 /etc/sudoers.d/$USERNAME \
+  && echo "export LOGNAME=$USERNAME" >> /home/$USERNAME/.bashrc \
+  && echo "export USER=$USERNAME" >> /home/$USERNAME/.bashrc \
   && echo "source /usr/share/bash-completion/completions/git" >> /home/$USERNAME/.bashrc \
   && echo "source /opt/vulcanexus/$ROS_DISTRO/setup.bash" >> /home/$USERNAME/.bashrc \
   # Cleanup

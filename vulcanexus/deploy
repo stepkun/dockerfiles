@@ -16,12 +16,13 @@ USER_GID=$USER_UID
 
 # before running this script you should have installed docker multiplattform support
 # on amd64 this can be done with the following two commands:
-# sudo docker run --privileged --rm tonistiigi/binfmt --install arm64 amd64
-# docker buildx create --use
+#       sudo docker run --privileged --rm tonistiigi/binfmt --install arm64 amd64
+#       docker buildx create --use
 # maybe you have to remove all the existent buildkits before with
 #       stop current buildkit
-#       "docker buildx rm <container name>"
-#       delete image "buildx-stable-1" 
+#       docker buildx ls   which will show <container_name> 
+#       docker buildx rm <container name>
+#       delete image "buildx-stable-1" and tonisiigi/binfmt
 # so that everything is created from scratch
 
 PLATFORMS="linux/arm64,linux/amd64"
@@ -32,8 +33,6 @@ UBUNTU=22.04
 DISTROS='humble iron'
 TARGETS='run dev sim full'
 
-# ask for clearance of cache
-docker buildx prune
 # ensure login into docker hub
 docker login
 for DISTRO in $DISTROS
