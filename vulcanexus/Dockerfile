@@ -31,10 +31,11 @@ USER root
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install Base package of Vulcanexus which is including ROS2
+# Prepare image for installations
 RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     alsa-utils \
     apt-utils \
+    bash-completion \
     curl \
     gnupg2 \
     iputils-ping \
@@ -45,6 +46,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     python-is-python3 \
     python3-pip \
     sudo \
+    terminator \
     tmux \
     tzdata \
     vim \
@@ -53,19 +55,11 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
   && locale-gen $LANGUAGE \
   && update-locale LC_ALL=$LANGUAGE LANG=$LANGUAGE \
   && dpkg-reconfigure --frontend noninteractive tzdata \
+  # add necessary repos
   && curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg \
   && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null \
   && curl -sSL https://raw.githubusercontent.com/eProsima/vulcanexus/main/vulcanexus.key -o /usr/share/keyrings/vulcanexus-archive-keyring.gpg \
-  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/vulcanexus-archive-keyring.gpg] http://repo.vulcanexus.org/debian $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/vulcanexus.list > /dev/null
-
-RUN apt-get update && apt-get install -y \
-    bash-completion \
-    vulcanexus-$ROS_DISTRO-core \
-    vulcanexus-$ROS_DISTRO-micro \
-    vulcanexus-$ROS_DISTRO-cloud \
-    # also install demo nodes for testing purposes
-    ros-$ROS_DISTRO-demo-nodes-cpp \
-    ros-$ROS_DISTRO-demo-nodes-py \
+  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/vulcanexus-archive-keyring.gpg] http://repo.vulcanexus.org/debian $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/vulcanexus.list > /dev/null \
   # add non-root user as defined above
   && groupadd --gid $USER_GID $USERNAME \
   && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
@@ -73,7 +67,16 @@ RUN apt-get update && apt-get install -y \
   && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
   && chmod 0440 /etc/sudoers.d/$USERNAME \
   && echo "source /usr/share/bash-completion/completions/git" >> /home/$USERNAME/.bashrc \
-  && echo "source /opt/vulcanexus/$ROS_DISTRO/setup.bash" >> /home/$USERNAME/.bashrc \
+  && echo "source /opt/vulcanexus/$ROS_DISTRO/setup.bash" >> /home/$USERNAME/.bashrc
+
+# Install Base package of Vulcanexus which is including ROS2 base package
+RUN apt-get update && apt-get install -y \
+    vulcanexus-$ROS_DISTRO-core \
+    vulcanexus-$ROS_DISTRO-micro \
+    vulcanexus-$ROS_DISTRO-cloud \
+    # also install demo nodes for testing purposes
+    ros-$ROS_DISTRO-demo-nodes-cpp \
+    ros-$ROS_DISTRO-demo-nodes-py \
   # Cleanup
   && apt-get autoremove -y \
   && apt-get clean -y \
@@ -134,7 +137,6 @@ RUN apt-get update && apt-get install -y \
     python3-rosdep2 \
     python3-vcstool \
     ros-dev-tools \
-    terminator \
     valgrind \
     vulcanexus-$ROS_DISTRO-tools \
   # Update pydocstyle
