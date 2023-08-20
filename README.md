@@ -14,10 +14,11 @@ Available targets are:
 All targets include the necessary ROS2 packages.<br>
 
 ### Build & Push:
+To build them all, run script "build" in this directory.<br>
 To build and push them all, run script "deploy" in this directory.<br>
 Please change DOCKER_ID in script to your Docker ID<br>
 <br>
-For a local build without pushing there is the script "localbuild".<br>
+For a local build without pushing there is the script "local".<br>
 Please change DOCKER_ID in script to your Docker ID<br>
 **Do not** push local build images, as these will overwrite and destroy the multiplatform images built by "deploy".<br>
 <br>
