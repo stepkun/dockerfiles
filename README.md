@@ -41,11 +41,11 @@ Ready to use images can be found in dockerID=stepkun<br>
 To run a container from one of the images use<br>
 On Linux:
 ```
-docker run -it -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --name <name> stepkun/vulcanexus:<ros-distro>-<target>
+docker run -it -e DISPLAY=:0 -v /tmp/.X11-unix:/tmp/.X11-unix --name <name> stepkun/vulcanexus:<ros-distro>-<target>
 ```
 On Windows:
 ```
-docker run -it -e DISPLAY=$DISPLAY -v \\\\wsl.localhost\\Ubuntu\\mnt\\wslg:/tmp --name <name> stepkun/vulcanexus:<ros-distro>-<target>
+docker run -it -e DISPLAY=:0 -v \\wsl.localhost\Ubuntu\mnt\wslg:/tmp --name <name> stepkun/vulcanexus:<ros-distro>-<target>
 ```
 An additional shell can be started with
 ```
