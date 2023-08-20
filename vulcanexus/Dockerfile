@@ -72,8 +72,6 @@ RUN apt-get update && apt-get install -y \
   # Add sudo support for the non-root user
   && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
   && chmod 0440 /etc/sudoers.d/$USERNAME \
-  && echo "export LOGNAME=$USERNAME" >> /home/$USERNAME/.bashrc \
-  && echo "export USER=$USERNAME" >> /home/$USERNAME/.bashrc \
   && echo "source /usr/share/bash-completion/completions/git" >> /home/$USERNAME/.bashrc \
   && echo "source /opt/vulcanexus/$ROS_DISTRO/setup.bash" >> /home/$USERNAME/.bashrc \
   # Cleanup
@@ -90,6 +88,7 @@ ENV LANG=$LANGUAGE \
     CMAKE_PREFIX_PATH=/opt/vulcanexus/$ROS_DISTRO \
     COLCON_PREFIX_PATH=/opt/vulcanexus/$ROS_DISTRO \
     LD_LIBRARY_PATH=/opt/vulcanexus/$ROS_DISTRO/lib:/opt/ros/$ROS_DISTRO/opt/rviz_ogre_vendor/lib:/opt/ros/$ROS_DISTRO/lib/x86_64-linux-gnu:/opt/ros/$ROS_DISTRO/lib \
+    LOGNAME=$USERNAME \
     PATH=/opt/vulcanexus/$ROS_DISTRO/bin:/opt/ros/$ROS_DISTRO/bin:$PATH \
     PKG_CONFIG_PATH=/opt/vulcanexus/$ROS_DISTRO/lib/x86_64-linux-gnu/pkgconfig:/opt/vulcanexus/$ROS_DISTRO/lib/pkgconfig \
     PYTHONPATH=/opt/vulcanexus/$ROS_DISTRO/local/lib/python3.10/dist-packages:/opt/vulcanexus/$ROS_DISTRO/lib/python3.10/site-packages:/opt/ros/$ROS_DISTRO/lib/python3.10/site-packages:/opt/ros/$ROS_DISTRO/local/lib/python3.10/dist-packages \
@@ -98,6 +97,7 @@ ENV LANG=$LANGUAGE \
     ROS_LOCALHOST_ONLY=0 \
     ROS_PYTHON_VERSION=3 \
     ROS_VERSION=2 \
+    USER=$USERNAME \
     VULCANEXUS_DISTRO=$ROS_DISTRO \
     VULCANEXUS_HOME=/opt/vulcanexus/$ROS_DISTRO \
     DEBIAN_FRONTEND=
