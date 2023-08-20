@@ -40,10 +40,7 @@ docker build \
 Ready to use images can be found in dockerID=stepkun<br>
 To run a container from one of the images use
 ```
-docker run -it \
-    -e DISPLAY=$DISPLAY \
-    -v /tmp/.X11-unix:/tmp/.X11-unix \
-    --name <name> <dockerID>/vulcanexus:humble-<target>
+docker run -it -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --name <name> stepkun/vulcanexus:<ros-distro>-<target>
 ```
 An additional shell can be started with
 ```
