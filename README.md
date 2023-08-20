@@ -44,5 +44,5 @@ docker run -it -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix --name <name
 ```
 An additional shell can be started with
 ```
-docker exec -it <name> su ros
+docker exec -it <name> bash
 ```
