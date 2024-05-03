@@ -32,11 +32,16 @@ USER root
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Prepare image for installations
-RUN apt-get update && apt-get upgrade -y && apt-get install -y \
+RUN apt-get update && apt-get dist-upgrade -y
+
+# Run basic installations
+RUN apt-get install -y \
     alsa-utils \
     apt-utils \
     bash-completion \
     curl \
+    dbus \
+    dbus-x11 \
     gnupg2 \
     iputils-ping \
     locales \
@@ -70,7 +75,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
   && echo "source /opt/vulcanexus/$ROS_DISTRO/setup.bash" >> /home/$USERNAME/.bashrc
 
 # Install Base package of Vulcanexus which is including ROS2 base package
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     vulcanexus-$ROS_DISTRO-core \
     vulcanexus-$ROS_DISTRO-micro \
     vulcanexus-$ROS_DISTRO-cloud \
@@ -125,7 +130,7 @@ USER root
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Add development packages
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
     gdb \
@@ -143,11 +148,12 @@ RUN apt-get update && apt-get install -y \
   && pip install --upgrade pydocstyle \
   && rosdep init || echo "rosdep already initialized"
 
-# build colcon sanitize environment for defined user
+# switch to defined user
 USER $USERNAME
 WORKDIR /home/$USERNAME
 
-RUN sudo apt-get install -y python3-colcon-mixin \
+# build colcon sanitize environment for defined user
+RUN sudo apt-get install -y --no-install-recommends python3-colcon-mixin \
   && sudo rosdep init \
   && colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml \
   && colcon mixin update default \
@@ -182,7 +188,7 @@ USER root
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Add simulation packages for both webots and gazebo
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     vulcanexus-$ROS_DISTRO-simulation \
 #    ros-$ROS_DISTRO-gazebo-ros \
 #    ros-$ROS_DISTRO-gazebo-ros2-control \
@@ -217,7 +223,7 @@ USER root
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Add ros2/vulcanexus desktop packages
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
 # needed?
 #    xvfb \
     vulcanexus-$ROS_DISTRO-desktop \
